@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function owner(uid) { return signedIn() && request.auth.uid == uid; }
+
+    match /organizations/{uid} {
+      allow read, write: if owner(uid);
+
+      match /members/{memberUid} {
+        allow read, write: if owner(uid);
+      }
+      match /data/{docId} {
+        allow read, write: if owner(uid);
+      }
+      match /employees/{employeeId} {
+        allow read, write: if owner(uid);
+      }
+      match /payrolls/{payrollId} {
+        allow read, write: if owner(uid);
+      }
+      match /statutoryUpdates/{updateId} {
+        allow read, write: if owner(uid);
+      }
+      match /logos/{logoKey} {
+        allow read, write: if owner(uid);
+      }
+    }
+  }
+}
